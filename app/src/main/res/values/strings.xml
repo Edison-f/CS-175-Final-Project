@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CS175FinalProject</string>
+    <string name="add_course_button"> Add a Course</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="course_name"> Course 101 </string>
 </resources>
