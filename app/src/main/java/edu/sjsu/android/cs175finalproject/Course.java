@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+// I am thinking to make this an interface to generate the final grade only.
 public class Course {
 
     enum GradingType {

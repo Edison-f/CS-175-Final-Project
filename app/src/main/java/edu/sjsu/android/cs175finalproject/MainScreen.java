@@ -1,5 +1,7 @@
 package edu.sjsu.android.cs175finalproject;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,55 +26,78 @@ public class MainScreen extends Fragment {
 
     private RecyclerView recyclerView;
     private CourseAdapter courseAdapter;
-    private static ArrayList<String> courseList;
+    private ArrayList<String> courseList;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public MainScreen() {}
 
-    public MainScreen() {
-        // Required empty public constructor
-    }
-
-    public static MainScreen newInstance(String param1, String param2) {
-        MainScreen fragment = new MainScreen();
-        Bundle args = new Bundle();
-        // You can pass parameters using this bundle if needed
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // mParam1 = getArguments().getString(ARG_PARAM1);
-            // mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public static MainScreen newInstance() {
+        return new MainScreen();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the correct layout
         View view = inflater.inflate(R.layout.fragment_main_screen, container, false);
 
-        // Initialize RecyclerView and other components
-        recyclerView = view.findViewById(R.id.recyclerViewCourses);
+        // Initialize button and set its click listener
+        Button addCourseButton = view.findViewById(R.id.btnAddCourse);
+        addCourseButton.setOnClickListener(v -> {
+            // Show a dialog to get the course name from the user
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Add Course");
 
-        // Assuming you want a vertical list
+            // Create an EditText input field
+            final EditText input = new EditText(requireContext());
+            input.setHint("Enter course name");
+
+            // Add the EditText to the dialog
+            builder.setView(input);
+
+            // Set up the dialog buttons
+            builder.setPositiveButton("Add", (dialog, which) -> {
+                String courseName = input.getText().toString().trim();
+                if (!courseName.isEmpty()) {
+                    addCourse(courseName); // Add the course
+                } else {
+                    Toast.makeText(getContext(), "Course name cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+            // Show the dialog
+            builder.show();
+        });
+
+        // Initialize RecyclerView
+        recyclerView = view.findViewById(R.id.recyclerViewCourses);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Example data - replace with your own data source
+        // Initialize course list and adapter
         courseList = new ArrayList<>();
-        courseList.add("✏\uFE0F Course 1");
-        courseList.add("✏\uFE0F Course 2");
-        courseList.add("✏\uFE0F Course 3");
+        courseList.add("✏️ CS175");
+        courseList.add("✏️ CS175 is fun. Please give us an A");
+        courseList.add("✏️ CS175 classmates are cool. Please give us an A for our peer reviews.");
 
-        // Initialize adapter and set it to RecyclerView
-        courseAdapter = new CourseAdapter(courseList);
+        courseAdapter = new CourseAdapter(courseList, this::onCourseClick);
         recyclerView.setAdapter(courseAdapter);
 
         return view;
+    }
+
+    // Method to add a course
+    public void addCourse(String courseTitle) {
+        if (courseList != null && courseAdapter != null) {
+            courseList.add(courseTitle); // Add the course to the list
+            courseAdapter.notifyItemInserted(courseList.size() - 1); // Notify the adapter
+        }
+    }
+
+    private void onCourseClick(String courseTitle) {
+         // Navigate to CourseDetailActivity with the selected course
+        Intent intent = new Intent(getContext(), CourseDetailActivity.class);
+        intent.putExtra("courseTitle", courseTitle);
+        startActivity(intent);
     }
 }
