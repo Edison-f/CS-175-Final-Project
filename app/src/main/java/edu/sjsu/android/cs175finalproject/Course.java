@@ -99,7 +99,7 @@ public class Course {
         double totalWeight = 0;
         boolean valid = false;
         for (String group :
-                groups) {
+                groupWeights.keySet()) {
             double total = 0;
             boolean once = true;
             ArrayList<Assignment> arr = assignments.get(group);
@@ -190,7 +190,9 @@ public class Course {
         if (assignments.containsKey(group)) {
             assignments.get(group).add(a);
         } else {
-            addGroup(group);
+            if(!groupWeights.containsKey(group)) {
+                addGroup(group);
+            }
             assignments.put(group, new ArrayList<>());
             assignments.get(group).add(a);
         }
