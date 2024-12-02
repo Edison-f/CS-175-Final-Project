@@ -16,7 +16,7 @@ public class Course {
     // TODO: Probably want to retrieve data from files / database
 
     private double grade; // The grade in the course
-    private final String name; // The name of the course
+    private String name; // The name of the course
     private final HashMap<String, ArrayList<Assignment>> assignments; //A HashMap of groups as keys and an array of assignments as the value // Group, Arraylist of assignments within group
     private final ArrayList<String> groups; // An array of groups (probably not needed) // Want a group since HashMap not necessarily sorted
     private final HashMap<String, Double> groupWeights; // The weights corresponding to each group
@@ -174,8 +174,8 @@ public class Course {
         return name;
     }
 
-    public String setName() {
-        return name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

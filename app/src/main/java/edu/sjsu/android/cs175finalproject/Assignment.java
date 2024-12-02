@@ -4,12 +4,12 @@ package edu.sjsu.android.cs175finalproject;
 public class Assignment {
     private String name;
     private double score;
-    private double weight; // Weight as a decimal (e.g., 0.2 for 20%)
+    //private double weight; // Weight as a decimal (e.g., 0.2 for 20%)
 
-    public Assignment(String name, double score, double weight) {
+    public Assignment(String name, double score) {
         this.name = name;
         this.score = score;
-        this.weight = weight;
+        // this.weight = weight;
     }
 
     public String getName() {
@@ -20,7 +20,7 @@ public class Assignment {
         return score;
     }
 
-    public double getWeight() {
-        return weight;
-    }
+//    public double getWeight() {
+//        return weight;
+//    }
 }

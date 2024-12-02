@@ -74,11 +74,11 @@ public class MainScreen extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewCourses);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize course list and adapter
+        // Initialize course list and adapter <== This is just some default courses (if we dont have DB... we can fake it)
         courseList = new ArrayList<>();
         courseList.add("✏️ CS175");
-        courseList.add("✏️ CS175 is fun. Please give us an A");
-        courseList.add("✏️ CS175 classmates are cool. Please give us an A for our peer reviews.");
+        courseList.add("✏️ CS101");
+        courseList.add("✏️ CS146");
 
         courseAdapter = new CourseAdapter(courseList, this::onCourseClick);
         recyclerView.setAdapter(courseAdapter);
