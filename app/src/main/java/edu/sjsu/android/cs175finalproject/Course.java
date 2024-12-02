@@ -4,27 +4,30 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import kotlin.NotImplementedError;
 
-// I am thinking to make this an interface to generate the final grade only.
 public class Course {
 
-    enum GradingType {
+    enum GradingType { // TODO
         PERCENT, // Groups have different weights
         POINTS, // Assignments are given unweighted points (Similar to CS-175 grade scale)
     }
 
     // TODO: Probably want to retrieve data from files / database
 
-    private double grade;
-    private double points;
-    private final String name;
-    private final HashMap<String, ArrayList<Assignment>> assignments; // Group, Arraylist of assignments within group
-    private final ArrayList<String> groups; // Want a group since HashMap not necessarily sorted
-    private final HashMap<String, Double> groupWeights;
+    private double grade; // The grade in the course
+    private final String name; // The name of the course
+    private final HashMap<String, ArrayList<Assignment>> assignments; //A HashMap of groups as keys and an array of assignments as the value // Group, Arraylist of assignments within group
+    private final ArrayList<String> groups; // An array of groups (probably not needed) // Want a group since HashMap not necessarily sorted
+    private final HashMap<String, Double> groupWeights; // The weights corresponding to each group
     private final int[] thresholds; // Grade thresholds, (inclusive)
-    private boolean roundUp; // Is the professor expected to round up to nearest percent
-    private static final String[] gradeLetters = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F+", "F", "F-"};
+    private boolean roundUp; // Is the professor expected to round up to nearest percent (currently unused) // TODO
+    private static final String[] gradeLetters = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F+", "F", "F-"}; // Grade letters that should correspond to thresholds
 
+
+    /**
+     * Creates a new course
+     */
     public Course() {
         grade = 1.0;
         name = "Placeholder";
@@ -40,15 +43,38 @@ public class Course {
         thresholds = new int[]{98, 92, 90, 88, 82, 80, 78, 72, 70, 68, 62, 60, 57, 52, 50};
     }
 
-    public String getName() {
-        return name;
+    /**
+     * Creates a named course
+     * @param name The name of the course
+     */
+    public Course(String name) {
+        grade = 1.0;
+        this.name = name;
+        assignments = new HashMap<>();
+        groups = new ArrayList<>();
+        groupWeights = new HashMap<>();
+        groups.add("Default");
+//        groupWeights.put("Default", 1.0);
+        assignments.put("Default", new ArrayList<>());
+        // To make a grade unachievable set to value -1
+        // If no threshold met, give F
+        //  A+, A,  A-, B+, B,  B-, C+, C,  C-, D+,  D, D-, F+, F, F-
+        thresholds = new int[]{98, 92, 90, 88, 82, 80, 78, 72, 70, 68, 62, 60, 57, 52, 50};
     }
 
+    /**
+     * Formats the numerical grade into a decimal % value to 2 decimal places
+     * @return The formatted grade
+     */
     public String getNumericalGrade() {
         DecimalFormat df = new DecimalFormat("0.00");
         return df.format(grade * 100);
     }
 
+    /**
+     * Uses the thresholds to return the grade corresponding to the current grade
+     * @return The letter grade
+     */
     public String getLetterGrade() {
         for (int i = 0; i < thresholds.length; i++) {
             if (grade >= thresholds[i] / 100.0 && thresholds[i] / 100.0 != -1) {
@@ -58,6 +84,12 @@ public class Course {
         return "F-";
     }
 
+
+    /**
+     * Recalculates the grade using all assignments with a grade value set
+     * Call after adding or removing an assignment(s) or group(s)
+     * Default grade is an A
+     */
     public void recalculate() {
         if (groupWeights.isEmpty() && assignments.containsKey("Default") && assignments.get("Default").isEmpty()) {
             grade = 0.95; // If no assignments, return A
@@ -86,7 +118,6 @@ public class Course {
             }
             for (Assignment a :
                     arr) {
-//                grade += ((a.grade / a.pointsPossible) * weight);
                 if (a.grade != a.testGrade) {
                     valid = true;
                     grade += ((a.grade / a.pointsPossible) / (total / a.pointsPossible)) * weight;
@@ -97,27 +128,40 @@ public class Course {
                 }
             }
         }
-//        for (String group : groupWeights.keySet()) {
-//            totalWeight += groupWeights.get(group);
-//        }
         grade /= totalWeight;
         if(!valid) {
-            grade = 1.0;
+            grade = 0.95;
         }
     }
 
+    /**
+     * Adds a new group
+     * @param group The group name
+     * @param weight The arbitrary weight value
+     */
     public void addGroup(String group, double weight) {
         groups.add(group);
         groupWeights.put(group, weight);
         // TODO: Maybe sort the list
     }
 
+    /**
+     * Adds a new group with a default weight of 1.0
+     * @param group The group name
+     */
     public void addGroup(String group) {
         groups.add(group);
         groupWeights.put(group, 1.0);
         // TODO: Maybe sort the list
     }
 
+    /**
+     * Sets the group's weight to the specified value
+     * A 50-50 weight could be 1.0 and 1.0, 20-80 could be 5 and 20, a 1/3 1/3 1/3 split would have all equal values, etc.
+     * Weights are arbitrary and need to scale properly with each other, keep units consistent (use percents that add up to 1)
+     * @param group The group name
+     * @param weight The arbitrary group weight
+     */
     public void setGroupWeight(String group, double weight) {
         groupWeights.put(group, weight);
     }
@@ -126,6 +170,19 @@ public class Course {
         return groups;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String setName() {
+        return name;
+    }
+
+    /**
+     * Adds a new assignment, creating one if absent
+     * @param group The group name
+     * @param a The assignment
+     */
     public void addAssignment(String group, Assignment a) {
         if (!groupWeights.containsKey(group)) {
             groupWeights.put(group, 1.0);
@@ -141,15 +198,14 @@ public class Course {
 
     // Calculates the minimum average grade needed to get the desired grade
     public double minimumGrade(double desired) {
-
         return 0x0;
     }
 
     public static class Assignment {
-        private final double testGrade;
-        private double grade;
-        private double pointsPossible;
-        private String group;
+        private final double testGrade; // Testgrade is used to see if a grade is valid or not, will be set to 0xDEADBEEF
+        private double grade; // The current grade, equal to 0xDEADBEEF if not set
+        private double pointsPossible; // Total number of pts. possible
+        private String group; // The group name (idk if this needs to be here)
 
         public Assignment(double grade, double pointsPossible, String group) {
             this.testGrade = 0xDEADBEEF;
