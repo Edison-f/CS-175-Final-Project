@@ -85,10 +85,23 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             try {
-                String group = groupInput.getText().toString().trim();
-                double score = Double.parseDouble(scoreInput.getText().toString());
-                double scorePossible = Double.parseDouble(scorePossibleInput.getText().toString());
                 String name = nameInput.getText().toString().trim();
+                if (!name.matches("[a-zA-Z0-9-_]+]")) {
+                    throw new IllegalArgumentException("Assignment name can only contain letter (uppercase or lowercase), digit, or hyphen.");
+                }
+                String group = groupInput.getText().toString().trim();
+                if (!group.matches("[a-zA-Z0-9-_]+]")) {
+                    throw new IllegalArgumentException("Group name can only contain letter (uppercase or lowercase), digit, or hyphen.");
+                }
+                double score = Double.parseDouble(scoreInput.getText().toString());
+                if (score < 0) {
+                    throw  new IllegalArgumentException("Invalid score");
+                }
+                double scorePossible = Double.parseDouble(scorePossibleInput.getText().toString());
+                if (scorePossible < score) {
+                    throw new IllegalArgumentException("Invalid possible score");
+                }
+
                 // UI stuff
                 assignmentList.add(new Assignment(name, score));
 
