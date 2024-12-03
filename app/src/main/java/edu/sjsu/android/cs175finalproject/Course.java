@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import kotlin.NotImplementedError;
-
 public class Course {
 
     enum GradingType { // TODO
@@ -19,7 +17,7 @@ public class Course {
     private String name; // The name of the course
     private final HashMap<String, ArrayList<Assignment>> assignments; //A HashMap of groups as keys and an array of assignments as the value // Group, Arraylist of assignments within group
     private final ArrayList<String> groups; // An array of groups (probably not needed) // Want a group since HashMap not necessarily sorted
-    private final HashMap<String, Double> groupWeights; // The weights corresponding to each group
+    final HashMap<String, Double> groupWeights; // The weights corresponding to each group
     private final int[] thresholds; // Grade thresholds, (inclusive)
     private boolean roundUp; // Is the professor expected to round up to nearest percent (currently unused) // TODO
     private static final String[] gradeLetters = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F+", "F", "F-"}; // Grade letters that should correspond to thresholds
@@ -34,9 +32,9 @@ public class Course {
         assignments = new HashMap<>();
         groups = new ArrayList<>();
         groupWeights = new HashMap<>();
-        groups.add("Default");
+        //groups.add("Default");
 //        groupWeights.put("Default", 1.0);
-        assignments.put("Default", new ArrayList<>());
+        //assignments.put("Default", new ArrayList<>());
         // To make a grade unachievable set to value -1
         // If no threshold met, give F
         //  A+, A,  A-, B+, B,  B-, C+, C,  C-, D+,  D, D-, F+, F, F-
@@ -53,9 +51,9 @@ public class Course {
         assignments = new HashMap<>();
         groups = new ArrayList<>();
         groupWeights = new HashMap<>();
-        groups.add("Default");
+        //groups.add("Default");
 //        groupWeights.put("Default", 1.0);
-        assignments.put("Default", new ArrayList<>());
+        //assignments.put("Default", new ArrayList<>());
         // To make a grade unachievable set to value -1
         // If no threshold met, give F
         //  A+, A,  A-, B+, B,  B-, C+, C,  C-, D+,  D, D-, F+, F, F-
@@ -183,6 +181,9 @@ public class Course {
     public ArrayList<String> getGroups() {
         return groups;
     }
+    public HashMap<String, ArrayList<Assignment>> getAssignments() {
+        return assignments;
+    }
 
     public String getName() {
         return name;
@@ -249,7 +250,7 @@ public class Course {
 
         // Calculate the minimum grade needed on the upcoming assignment
         double minGradeNeeded = (desired / 100.0 - weightedGradeSum) / remainingWeight;
-        return Math.max(0.0, Math.min(1.0, minGradeNeeded)) * 100; // Return as a percentage between 0 and 100
+        return minGradeNeeded * 100; // Return as a percentage between 0 and 100
     }
 
     public static class Assignment {
