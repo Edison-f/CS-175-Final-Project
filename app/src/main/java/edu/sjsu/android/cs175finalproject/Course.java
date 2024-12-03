@@ -200,7 +200,39 @@ public class Course {
 
     // Calculates the minimum average grade needed to get the desired grade
     public double minimumGrade(double desired) {
-        return 0x0;
+        // Recalculate the current grade to ensure accuracy before calculation
+        recalculate();
+
+        // Check if the desired grade is lower than or equal to the current grade
+        if (desired <= grade) {
+            return 0.0; // No additional points needed; already meeting or exceeding the desired score
+        }
+
+        // Calculate the total weight of assignments already completed
+        double currentWeight = 0.0;
+        double weightedGradeSum = 0.0;
+        for (String group : groupWeights.keySet()) {
+            if (assignments.get(group) != null) {
+                for (Assignment a : assignments.get(group)) {
+                    if (a.grade != a.testGrade) { // Assignment with a valid grade
+                        double weight = groupWeights.get(group);
+                        currentWeight += weight;
+                        weightedGradeSum += (a.grade / a.pointsPossible) * weight;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Calculate remaining weight for the upcoming assignment
+        double remainingWeight = 1.0 - currentWeight;
+        if (remainingWeight <= 0) {
+            return -1; // No weight left for new assignments
+        }
+
+        // Calculate the minimum grade needed on the upcoming assignment
+        double minGradeNeeded = (desired / 100.0 - weightedGradeSum) / remainingWeight;
+        return Math.max(0.0, Math.min(1.0, minGradeNeeded)) * 100; // Return as a percentage between 0 and 100
     }
 
     public static class Assignment {

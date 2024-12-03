@@ -60,4 +60,20 @@ public class CalculateTests {
         // Assertions to verify the result
         assertEquals("60.00", course.getNumericalGrade());
     }
+
+    @Test
+    public void testMin() {
+        Course course = new Course();
+        course.addGroup("Homework", 0.4);
+        course.addGroup("Quizzes", 0.3);
+        course.addGroup("Final Exam", 0.3);
+
+        course.addAssignment("Homework", new Course.Assignment(85, 100, "Homework"));
+        course.addAssignment("Quizzes", new Course.Assignment(90, 100, "Quizzes"));
+
+        double desiredGrade = 90;
+        double requiredGrade = course.minimumGrade(desiredGrade);
+
+        assertEquals(96.67, requiredGrade, 0.01);
+    }
 }
