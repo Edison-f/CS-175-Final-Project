@@ -41,5 +41,13 @@
         android:backgroundTint="@color/colorAccent"
         android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal" />
-
+    <Button
+        android:id="@+id/calculateDesiredGradeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Required score for success?"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

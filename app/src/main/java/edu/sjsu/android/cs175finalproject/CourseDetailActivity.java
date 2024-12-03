@@ -10,17 +10,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 // This is something important, guys. This is the CourseDetail class that renders all the grade calculations.
+// 1. Set Group weight
 // TODO: If we need a database, we might have to fetch all the data here and generate the page.
 public class CourseDetailActivity extends AppCompatActivity {
 
     private ArrayList<Assignment> assignmentList;
     private AssignmentAdapter assignmentAdapter;
     private String courseTitle;
+    private double desiredGrade = 100;
 
     // in this course details class, we have our Course class
     private Course course;
@@ -51,7 +54,11 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         Button calculateGradeButton = findViewById(R.id.calculateGradeButton);
         calculateGradeButton.setOnClickListener(this::showCalculatedGrade);
+
+        Button calculateMinimumGradeButton = findViewById(R.id.calculateDesiredGradeButton);
+        calculateMinimumGradeButton.setOnClickListener(this::showRequiredGrade);
     }
+
     private void showCalculatedGrade(View view) {
         course.recalculate();
         String letterGrade = course.getLetterGrade();
@@ -63,8 +70,22 @@ public class CourseDetailActivity extends AppCompatActivity {
         builder.setMessage("Your current grade:\n" +
                 "Letter Grade: " + letterGrade + "\n" +
                 "Numeric Grade: " + String.format(Locale.US,"%.2f", Double.parseDouble(numericGrade)));
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        // Show the dialog
+        builder.create().show();
+    }
 
-        // Add an OK button
+    private void showRequiredGrade(View view) {
+        // Recalculate the course grade
+        course.recalculate();
+
+        // Assuming 'desiredGrade' is a field or passed value
+        double minimumGrade = course.minimumGrade(desiredGrade);
+        String letterGrade = course.getLetterGrade();
+        // Build the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your required grade to achieve the desired grade:\n" +
+                "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n");
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
         // Show the dialog
@@ -81,16 +102,15 @@ public class CourseDetailActivity extends AppCompatActivity {
         TextView groupInput = dialogView.findViewById(R.id.assignmentGroup);
         TextView scoreInput = dialogView.findViewById(R.id.assignmentScoreInput);
         TextView scorePossibleInput = dialogView.findViewById(R.id.assignmentScorePossible);
-        // TextView weightInput = dialogView.findViewById(R.id.assignmentWeightInput);
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             try {
                 String name = nameInput.getText().toString().trim();
-                if (!name.matches("[a-zA-Z0-9-_]+]")) {
+                if (!name.matches("[a-zA-Z0-9-_]+")) {
                     throw new IllegalArgumentException("Assignment name can only contain letter (uppercase or lowercase), digit, or hyphen.");
                 }
                 String group = groupInput.getText().toString().trim();
-                if (!group.matches("[a-zA-Z0-9-_]+]")) {
+                if (!group.matches("[a-zA-Z0-9-_]+")) {
                     throw new IllegalArgumentException("Group name can only contain letter (uppercase or lowercase), digit, or hyphen.");
                 }
                 double score = Double.parseDouble(scoreInput.getText().toString());
@@ -103,12 +123,10 @@ public class CourseDetailActivity extends AppCompatActivity {
                 }
 
                 // UI stuff
-                assignmentList.add(new Assignment(name, score));
+                assignmentList.add(new Assignment(name + "\uD83D\uDCDA", score));
 
-                // Logic stuff
                 Course.Assignment assignment = new Course.Assignment(score, scorePossible, group);
                 course.addAssignment(group, assignment);
-                course.recalculate();
 
                 assignmentAdapter.notifyDataSetChanged();
             } catch (IllegalArgumentException e) {
@@ -131,4 +149,5 @@ public class CourseDetailActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
+
 }

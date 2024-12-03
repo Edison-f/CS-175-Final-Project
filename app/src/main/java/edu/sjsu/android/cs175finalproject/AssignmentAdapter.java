@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private final ArrayList<Assignment> assignmentList;
+
 
     public AssignmentAdapter(ArrayList<Assignment> assignmentList) {
         this.assignmentList = assignmentList;
@@ -32,7 +34,6 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         Assignment assignment = assignmentList.get(position);
         holder.nameTextView.setText(assignment.getName());
         holder.scoreTextView.setText(String.format("Score: %.2f", assignment.getScore()));
-        //holder.weightTextView.setText(String.format("Weight: %.2f%%", assignment.getWeight()));
     }
 
     @Override
@@ -51,5 +52,9 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             scoreTextView = itemView.findViewById(R.id.assignmentScore);
             weightTextView = itemView.findViewById(R.id.assignmentWeight);
         }
+    }
+
+    public interface OnAssignemntClickListener {
+        void onCourseClick(String assignmentName);
     }
 }

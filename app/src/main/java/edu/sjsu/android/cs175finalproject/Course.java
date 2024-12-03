@@ -84,6 +84,20 @@ public class Course {
         return "F-";
     }
 
+    /**
+     *   This is to remove the assignment from the UI
+     */
+    public void removeAssignment(String group, String assignmentName) {
+        if (assignments.containsKey(group)) {
+            ArrayList<Assignment> groupAssignments = assignments.get(group);
+            groupAssignments.removeIf(assignment -> assignment.getName().equals(assignmentName));
+
+            // Remove the group if empty (optional)
+            if (groupAssignments.isEmpty()) {
+                assignments.remove(group);
+            }
+        }
+    }
 
     /**
      * Recalculates the grade using all assignments with a grade value set
@@ -198,6 +212,9 @@ public class Course {
         }
     }
 
+
+    //
+    // value: avg()
     // Calculates the minimum average grade needed to get the desired grade
     public double minimumGrade(double desired) {
         // Recalculate the current grade to ensure accuracy before calculation
@@ -240,6 +257,7 @@ public class Course {
         private double grade; // The current grade, equal to 0xDEADBEEF if not set
         private double pointsPossible; // Total number of pts. possible
         private String group; // The group name (idk if this needs to be here)
+        private String name;
 
         public Assignment(double grade, double pointsPossible, String group) {
             this.testGrade = 0xDEADBEEF;
@@ -254,6 +272,12 @@ public class Course {
             this.grade = 0xDEADBEEF;
             this.pointsPossible = pointsPossible;
             this.group = group;
+        }
+
+        public Assignment(String name, double grade) {
+        this.testGrade = 0xDEADBEEF;
+            this.grade = grade;
+            this.name = name;
         }
 
         public void clearGrade() {
@@ -284,9 +308,12 @@ public class Course {
         public void setPointsPossible(double pointsPossible) {
             this.pointsPossible = pointsPossible;
         }
+        public String getName() {return this.name;}
 
         public void setGroup(String group) {
             this.group = group;
         }
+
+        public double getScore() {return this.grade;}
     }
 }
