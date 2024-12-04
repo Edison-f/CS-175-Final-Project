@@ -11,6 +11,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
+
 import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
 import java.util.ArrayList;
@@ -91,14 +94,31 @@ public class CourseDetailActivity extends AppCompatActivity {
     private void showRequiredGrade(View view) {
         // Recalculate the course grade
         course.recalculate();
-
-        // Assuming 'desiredGrade' is a field or passed value
-        double minimumGrade = course.minimumGrade(desiredGrade);
-        String letterGrade = course.getLetterGrade();
-        // Build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your required grade to achieve the desired grade:\n" +
-                "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n");
+        TextView des = findViewById(R.id.desiredInput);
+        try {
+            if(des.getText().toString().isEmpty()) {
+                throw new IllegalArgumentException("Desired grade cannot be empty.");
+            }
+            desiredGrade = Double.parseDouble(des.getText().toString());
+            Log.d("CALC", "" + desiredGrade);
+
+            // Assuming 'desiredGrade' is a field or passed value
+            double minimumGrade = course.minimumGrade(desiredGrade);
+            String letterGrade = course.getLetterGrade();
+            // Build the dialog
+
+            builder.setMessage("Your required grade to achieve the desired grade:\n" +
+                    "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n");
+        } catch (IllegalArgumentException e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Invalid Input")
+                    .setMessage(e.getMessage())
+                    .setPositiveButton("OK", null)
+                    .show();
+        }
+
+
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
         // Show the dialog
