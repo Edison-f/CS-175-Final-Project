@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/textViewCourseTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
@@ -18,117 +18,101 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/addAssignmentButton"
-        android:layout_width="382dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginTop="72dp"
         android:text="Add Assignment"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewCourseTitle" />
 
     <Button
         android:id="@+id/addGroupButton"
-        android:layout_width="185dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
+        android:layout_margin="3dp"
+        android:layout_marginTop="10dp"
         android:text="Add Group"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewAssignments"
-        app:layout_constraintStart_toStartOf="@+id/textViewCourseTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/showGroupButton"
         app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton" />
 
     <Button
         android:id="@+id/showGroupButton"
-        android:layout_width="187dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginStart="194dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="3dp"
+        android:layout_marginTop="10dp"
         android:text="Show Groups"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewAssignments"
-        app:layout_constraintEnd_toEndOf="@+id/textViewCourseTitle"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toStartOf="@+id/addGroupButton"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCourseTitle"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintStart_toEndOf="@+id/addGroupButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAssignments"
-        android:layout_width="385dp"
-        android:layout_height="369dp"
-        android:layout_marginTop="80dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/addGroupButton"
+        app:layout_constraintBottom_toTopOf="@+id/calculateGradeButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/calculateGradeButton"
-
-        android:layout_width="180dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="3dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="1dp"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Calculate Grade"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desiredGrade"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/calculateDesiredGradeButton"
-        android:layout_width="180dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="3dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="1dp"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Required score for desired grade"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerViewAssignments"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/calculateGradeButton"
-        app:layout_constraintTop_toBottomOf="@+id/desiredInput"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <EditText
-        android:id="@+id/desiredInput"
-        android:layout_width="159dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:hint="Desired Grade"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
-        app:layout_constraintStart_toEndOf="@+id/desiredGrade"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.901" />
 
     <TextView
         android:id="@+id/desiredGrade"
-        android:layout_width="159dp"
-        android:layout_height="55dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
         android:text="Desired Grade:"
-        android:textSize="24sp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/calculateGradeButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/desiredInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:hint="Enter Grade"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/calculateDesiredGradeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/desiredGrade" />
+
+
+    <Button
+        android:id="@+id/calculateGradeButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="3dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="-10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="Calculate Grade"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@id/calculateDesiredGradeButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.901" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/calculateDesiredGradeButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="3dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="-10dp"
+        android:text="Required Score"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintStart_toEndOf="@+id/calculateGradeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
