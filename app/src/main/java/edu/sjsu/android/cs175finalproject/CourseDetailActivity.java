@@ -74,7 +74,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         addGroupButton.setOnClickListener(this::showAddGroupDialog);
 
         Button showGroupButton = findViewById(R.id.showGroupButton);
-        showGroupButton.setOnClickListener(this::showGroupsDialog);
+        showGroupButton.setOnClickListener(this::showShowGroupsDialog);
     }
 
     private void showCalculatedGrade(View view) {
@@ -98,47 +98,46 @@ public class CourseDetailActivity extends AppCompatActivity {
     private void showRequiredGrade(View view) {
         // Recalculate the course grade
         course.recalculate();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         TextView des = findViewById(R.id.desiredInput);
+        if(des.getText().toString().isEmpty()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Invalid Input")
+                    .setMessage("Desired grade cannot be empty.")
+                    .setPositiveButton("OK", null)
+                    .show();
+            return;
+        }
         try {
-            if(des.getText().toString().isEmpty()) {
-                throw new IllegalArgumentException("Desired grade cannot be empty.");
-            }
             desiredGrade = Double.parseDouble(des.getText().toString());
-            Log.d("CALC", "" + desiredGrade);
-
-            // Assuming 'desiredGrade' is a field or passed value
             double minimumGrade = course.minimumGrade(desiredGrade);
-            String letterGrade = course.getLetterGrade();
-            // Build the dialog
 
-            builder.setMessage("Your required grade to achieve the desired grade:\n" +
-                    "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n");
+            String message = "Your required grade to achieve the desired grade:\n" +
+                             "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Required Grade")
+                    .setMessage(message) // Set the message here
+                    .setPositiveButton("OK", null)
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show(); // Show the dialog
         } catch (IllegalArgumentException e) {
             new AlertDialog.Builder(this)
                     .setTitle("Invalid Input")
                     .setMessage(e.getMessage())
                     .setPositiveButton("OK", null)
                     .show();
-        }
-
-
-        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-
-        // Show the dialog
-        builder.create().show();
+        };
     }
     @SuppressLint("NotifyDataSetChanged")
-    private void showGroupsDialog(View view) {
+    private void showShowGroupsDialog(View view) {
         /**
          * in order to make it more pretty, I decided to print out a table...
          */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_group, null);
         builder.setView(dialogView);
-        TextView groups = dialogView.findViewById(R.id.groups);
-        TableLayout tableLayout = dialogView.findViewById(R.id.tableLayout);
 
+        TableLayout tableLayout = dialogView.findViewById(R.id.tableLayout);
         ArrayList<String[]> groupsData = new ArrayList<>();
         for (Map.Entry<String, Double> ent: this.course.groupWeights.entrySet()) {
             String groupName = ent.getKey();
@@ -180,11 +179,8 @@ public class CourseDetailActivity extends AppCompatActivity {
                     throw  new IllegalArgumentException("Invalid weight");
                 }
 
-
                 // UI stuff
                 groupList.add(groupName + " with weight " + weight);
-
-
                 course.addGroup(groupName, weight);
 
                 assignmentAdapter.notifyDataSetChanged();
@@ -241,12 +237,11 @@ public class CourseDetailActivity extends AppCompatActivity {
                     if (scorePossible < score) {
                         throw new IllegalArgumentException("Invalid possible score");
                     }
-                    assignmentList.add(new Assignment(name + "\uD83D\uDCDA", score));                    assignment.set(new Assignment(score, scorePossible, group));
+                    assignmentList.add(new Assignment(name + "\uD83D\uDCDA", score));
+                    assignment.set(new Assignment(score, scorePossible, group));
                 }
 
                 // UI stuff
-
-
                 course.addAssignment(group, assignment.get());
 
                 assignmentAdapter.notifyDataSetChanged();
