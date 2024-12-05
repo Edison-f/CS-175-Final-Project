@@ -3,8 +3,11 @@ package edu.sjsu.android.cs175finalproject;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +21,7 @@ import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 // This is something important, guys. This is the CourseDetail class that renders all the grade calculations.
@@ -126,12 +130,34 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
     @SuppressLint("NotifyDataSetChanged")
     private void showGroupsDialog(View view) {
+        /**
+         * in order to make it more pretty, I decided to print out a table...
+         */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_group, null);
         builder.setView(dialogView);
         TextView groups = dialogView.findViewById(R.id.groups);
-        TextView groupsList = dialogView.findViewById(R.id.groupList);
-        groupsList.setText(groupList.toString());
+        TableLayout tableLayout = dialogView.findViewById(R.id.tableLayout);
+
+        ArrayList<String[]> groupsData = new ArrayList<>();
+        for (Map.Entry<String, Double> ent: this.course.groupWeights.entrySet()) {
+            String groupName = ent.getKey();
+            String groupWeights = ent.getValue().toString();
+            groupsData.add(new String[]{groupName, groupWeights});
+        }
+        for (String[] row : groupsData) {
+            TableRow tableRow = new TableRow(this);
+
+            for (String cell : row) {
+                TextView textView = new TextView(this);
+                textView.setText(cell);
+                textView.setPadding(16, 16, 16, 16);
+                textView.setGravity(Gravity.CENTER);
+                tableRow.addView(textView);
+            }
+
+            tableLayout.addView(tableRow);
+        }
         builder.setNegativeButton("OK", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
@@ -217,7 +243,6 @@ public class CourseDetailActivity extends AppCompatActivity {
                     }
                     assignmentList.add(new Assignment(name + "\uD83D\uDCDA", score));                    assignment.set(new Assignment(score, scorePossible, group));
                 }
-
 
                 // UI stuff
 
