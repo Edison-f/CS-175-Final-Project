@@ -3,6 +3,7 @@ package edu.sjsu.android.cs175finalproject;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
@@ -34,7 +35,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         Assignment assignment = assignmentList.get(position);
         holder.nameTextView.setText(assignment.getName());
         holder.scoreTextView.setText(String.format("Score: %.2f", assignment.getScore()));
+        holder.weightTextView.setText(assignment.getGroup());
+        //holder.editAssignment.setOnClickListener(Course.);
     }
+
 
     @Override
     public int getItemCount() {
@@ -45,6 +49,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         TextView nameTextView;
         TextView scoreTextView;
         TextView weightTextView;
+        Button editAssignment:
 
         public AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
