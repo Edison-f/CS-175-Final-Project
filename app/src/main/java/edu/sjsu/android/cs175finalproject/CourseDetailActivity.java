@@ -1,6 +1,7 @@
 package edu.sjsu.android.cs175finalproject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,10 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
@@ -75,6 +80,46 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         Button showGroupButton = findViewById(R.id.showGroupButton);
         showGroupButton.setOnClickListener(this::showShowGroupsDialog);
+
+        Button exportButton = findViewById(R.id.export_button);
+        exportButton.setOnClickListener(this::exportClass);
+
+        Button importButton = findViewById(R.id.import_button);
+        importButton.setOnClickListener(this::importClass);
+
+        Log.wtf("b", "awf");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.wtf("z", "x");
+        super.onDestroy();
+    }
+
+    private void exportClass(View view) {
+        try {
+            Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
+            FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(course);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            // maybe write toast
+        }
+    }
+
+    private void importClass (View view) {
+        try {
+            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
+            Context context = getApplicationContext();
+            FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            course = (Course) is.readObject();
+            is.close();
+            fis.close();
+        }
+        catch (Exception e) {Log.wtf("be", e.getMessage());}
     }
 
     private void showCalculatedGrade(View view) {
@@ -89,7 +134,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         builder.setTitle("Calculated Grade");
         builder.setMessage("Your current grade:\n" +
                 "Letter Grade: " + letterGrade + "\n" +
-                "Numeric Grade: " + String.format(Locale.US,"%.2f", Double.parseDouble(numericGrade)));
+                "Numeric Grade: " + String.format(Locale.US, "%.2f", Double.parseDouble(numericGrade)));
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         // Show the dialog
         builder.create().show();
@@ -99,7 +144,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         // Recalculate the course grade
         course.recalculate();
         TextView des = findViewById(R.id.desiredInput);
-        if(des.getText().toString().isEmpty()) {
+        if (des.getText().toString().isEmpty()) {
             new AlertDialog.Builder(this)
                     .setTitle("Invalid Input")
                     .setMessage("Desired grade cannot be empty.")
@@ -112,7 +157,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             double minimumGrade = course.minimumGrade(desiredGrade);
 
             String message = "Your required grade to achieve the desired grade:\n" +
-                             "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n";
+                    "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Required Grade")
                     .setMessage(message) // Set the message here
@@ -126,8 +171,10 @@ public class CourseDetailActivity extends AppCompatActivity {
                     .setMessage(e.getMessage())
                     .setPositiveButton("OK", null)
                     .show();
-        };
+        }
+        ;
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private void showShowGroupsDialog(View view) {
         /**
@@ -139,7 +186,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         TableLayout tableLayout = dialogView.findViewById(R.id.tableLayout);
         ArrayList<String[]> groupsData = new ArrayList<>();
-        for (Map.Entry<String, Double> ent: this.course.groupWeights.entrySet()) {
+        for (Map.Entry<String, Double> ent : this.course.groupWeights.entrySet()) {
             String groupName = ent.getKey();
             String groupWeights = ent.getValue().toString();
             groupsData.add(new String[]{groupName, groupWeights});
@@ -160,6 +207,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         builder.setNegativeButton("OK", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private void showAddGroupDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -176,7 +224,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                 double weight = Double.parseDouble(weightInput.getText().toString());
                 if (weight < 0) {
-                    throw  new IllegalArgumentException("Invalid weight");
+                    throw new IllegalArgumentException("Invalid weight");
                 }
 
                 // UI stuff
@@ -203,6 +251,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private void showAddAssignmentDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -227,12 +276,11 @@ public class CourseDetailActivity extends AppCompatActivity {
                 String scoreString = scoreInput.getText().toString();
 
                 double scorePossible = Double.parseDouble(scorePossibleInput.getText().toString());
-                if(scoreString.isEmpty()) {
+                if (scoreString.isEmpty()) {
 
                     assignmentList.add(new Assignment(name + "(Not yet graded.)", 0));
                     assignment.set(new Assignment(scorePossible, group));
-                }
-                else {
+                } else {
                     double score = Double.parseDouble(scoreString);
                     if (scorePossible < score) {
                         throw new IllegalArgumentException("Invalid possible score");

@@ -1,10 +1,11 @@
 package edu.sjsu.android.cs175finalproject;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Course {
+public class Course implements Serializable {
 
     enum GradingType { // TODO
         PERCENT, // Groups have different weights
@@ -253,7 +254,7 @@ public class Course {
         return minGradeNeeded * 100; // Return as a percentage between 0 and 100
     }
 
-    public static class Assignment {
+    public static class Assignment implements Serializable{
         private final double testGrade; // Testgrade is used to see if a grade is valid or not, will be set to 0xDEADBEEF
         private double grade; // The current grade, equal to 0xDEADBEEF if not set
         private double pointsPossible; // Total number of pts. possible

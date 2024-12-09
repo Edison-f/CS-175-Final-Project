@@ -1,6 +1,7 @@
 package edu.sjsu.android.cs175finalproject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -41,6 +45,7 @@ public class MainScreen extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_screen, container, false);
 
         // Initialize button and set its click listener
+        view.findViewById(R.id.serialize).setOnClickListener(v -> {});
         Button addCourseButton = view.findViewById(R.id.btnAddCourse);
         addCourseButton.setOnClickListener(v -> {
             // Show a dialog to get the course name from the user
