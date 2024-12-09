@@ -49,7 +49,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         TextView nameTextView;
         TextView scoreTextView;
         TextView weightTextView;
-        Button editAssignment:
+        Button editAssignment;
 
         public AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
