@@ -88,11 +88,32 @@ public class CourseDetailActivity extends AppCompatActivity {
         importButton.setOnClickListener(this::importClass);
 
         Log.wtf("b", "awf");
+        try {
+            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
+            FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            course = (Course) is.readObject();
+            is.close();
+            fis.close();
+        }
+        catch (Exception e) {Log.wtf("be", e.getMessage());}
     }
 
     @Override
     protected void onDestroy() {
         Log.wtf("z", "x");
+        try {
+            Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
+            FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
+//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(course);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            // maybe write toast
+            Log.wtf("be", e.getMessage());
+        }
         super.onDestroy();
     }
 
@@ -100,19 +121,20 @@ public class CourseDetailActivity extends AppCompatActivity {
         try {
             Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
             FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
+//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(course);
             os.close();
             fos.close();
         } catch (IOException e) {
             // maybe write toast
+            Log.wtf("be", e.getMessage());
         }
     }
 
     private void importClass (View view) {
         try {
             Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
-            Context context = getApplicationContext();
             FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectInputStream is = new ObjectInputStream(fis);
             course = (Course) is.readObject();
