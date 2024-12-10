@@ -1,7 +1,6 @@
 package edu.sjsu.android.cs175finalproject;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,28 +19,15 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MainScreen extends Fragment {
 
-    private RecyclerView recyclerView;
     private CourseAdapter courseAdapter;
     private ArrayList<String> courseList;
 
     public MainScreen() {
-    }
-
-    public static MainScreen newInstance() {
-        return new MainScreen();
     }
 
     @Override
@@ -68,7 +54,7 @@ public class MainScreen extends Fragment {
             builder.setPositiveButton("Add", (dialog, which) -> {
                 String courseName = input.getText().toString().trim();
                 if (!courseName.isEmpty()) {
-                    if(courseName.equals("courseList")) {
+                    if (courseName.equals("courseList")) {
                         Toast.makeText(getContext(), "Course name cannot be 'courseList'", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -85,21 +71,21 @@ public class MainScreen extends Fragment {
         });
 
         // Initialize RecyclerView
-        recyclerView = view.findViewById(R.id.recyclerViewCourses);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewCourses);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize course list and adapter <== This is just some default courses (if we dont have DB... we can fake it)
         courseList = new ArrayList<>();
         try {
-            FileInputStream fis = new FileInputStream(getContext().getFilesDir() + "/" + "courseList");
+            FileInputStream fis = new FileInputStream(requireContext().getFilesDir() + "/" + "courseList");
             Scanner in = new Scanner(fis);
             while (in.hasNextLine()) {
                 courseList.add(in.nextLine());
             }
-            Log.wtf("Worked", "Read");
+            Log.wtf("Restore Course Names", "Success");
 
         } catch (Exception e) {
-            Log.wtf("Read", e.getMessage());
+            Log.wtf("Restore Course Names", e.getMessage());
+            Log.wtf("Restore Course Names", "Using default course names");
             courseList.add("✏️ CS175");
             courseList.add("✏️ CS101");
             courseList.add("✏️ CS146");
@@ -117,15 +103,14 @@ public class MainScreen extends Fragment {
             courseAdapter.notifyItemInserted(courseList.size() - 1); // Notify the adapter
         }
         try {
-            FileOutputStream fos = new FileOutputStream(getContext().getFilesDir() + "/" + "courseList", false);
+            FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir() + "/" + "courseList", false);
             for (String course : courseList) {
                 fos.write((course + "\n").getBytes());
-                Log.wtf("Course data", (course + "\n"));
             }
             fos.close();
-            Log.wtf("Worked", "Saved");
+            Log.wtf("Save Course Names", "Success");
         } catch (IOException e) {
-            Log.wtf("save error", e.getMessage());
+            Log.wtf("Save Course Names", e.getMessage());
         }
     }
 

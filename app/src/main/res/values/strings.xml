@@ -1,7 +1,31 @@
 <resources>
     <string name="app_name">CS175FinalProject</string>
     <string name="add_course_button"> Add a Course</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="course_name"> Course 101 </string>
+    <string name="score_format">Score: %.2f</string>
+    <string name="book_emoji">📚</string>
+    <string name="group_name">"Group Name: "</string>
+    <string name="course_title">Course Title</string>
+    <string name="add_assignment">Add Assignment</string>
+    <string name="add_group">Add Group</string>
+    <string name="show_groups">Show Groups</string>
+    <string name="desired_grade">Desired Grade:</string>
+    <string name="enter_grade">Enter Grade</string>
+    <string name="calculate_grade">Calculate Grade</string>
+    <string name="required_score">Required Score</string>
+    <string name="assignment_name">Assignment Name</string>
+    <string name="score_placeholder">Score: 0.00</string>
+    <string name="test">test</string>
+    <string name="assignment_name_dialog">Assignment Name</string>
+    <string name="assignment_group">Assignment Group</string>
+    <string name="score">Score</string>
+    <string name="max_score">Max Score</string>
+    <string name="group_name_dialog">Group Name</string>
+    <string name="weight">Weight</string>
+    <string name="groups_show">Groups</string>
+    <string name="group_name_show">Group Name</string>
+    <string name="group_weight_show">Group Weight</string>
+    <string name="add_course_main">ADD COURSE</string>
+    <string name="add_course_desc">Add Course</string>
 </resources>

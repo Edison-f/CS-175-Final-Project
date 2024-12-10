@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,29 +10,42 @@
         android:id="@+id/assignmentNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Assignment Name"
-        android:inputType="text" />
+        android:hint="@string/assignment_name_dialog"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        tools:ignore="VisualLintTextFieldSize" />
+
     <EditText
         android:id="@+id/assignmentGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Assignment Group"
-        android:inputType="text" />
+        android:hint="@string/assignment_group"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/assignmentScoreInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Score"
+        android:layout_marginTop="8dp"
+        android:hint="@string/score"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
-        android:layout_marginTop="8dp" />
+        android:minHeight="48dp"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/assignmentScorePossible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Max Score"
+        android:layout_marginTop="8dp"
+        android:hint="@string/max_score"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
-        android:layout_marginTop="8dp" />
+        android:minHeight="48dp"
+        tools:ignore="VisualLintTextFieldSize" />
 
 </LinearLayout>

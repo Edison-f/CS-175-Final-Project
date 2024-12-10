@@ -5,35 +5,23 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class Course implements Serializable {
 
-    enum GradingType { // TODO
-        PERCENT, // Groups have different weights
-        POINTS, // Assignments are given unweighted points (Similar to CS-175 grade scale)
-    }
-
-    // TODO: Probably want to retrieve data from files / database
-
-
     private double grade; // The grade in the course
-    private String name; // The name of the course
     private final HashMap<String, ArrayList<Assignment>> assignments; //A HashMap of groups as keys and an array of assignments as the value // Group, Arraylist of assignments within group
     private final ArrayList<String> groups; // An array of groups (probably not needed) // Want a group since HashMap not necessarily sorted
     final HashMap<String, Double> groupWeights; // The weights corresponding to each group
     private final int[] thresholds; // Grade thresholds, (inclusive)
-    private boolean roundUp; // Is the professor expected to round up to nearest percent (currently unused) // TODO
     private static final String[] gradeLetters = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F+", "F", "F-"}; // Grade letters that should correspond to thresholds
 
     public List<Assignment> returnAssignmentList() {
         List<Assignment> ret = new ArrayList<>();
 
         for (Entry<String, ArrayList<Assignment>> ent : assignments.entrySet()) {
-            for (Assignment assignment : ent.getValue()) {
-                ret.add(assignment);
-            }
+            ret.addAll(ent.getValue());
         }
         return ret;
     }
@@ -42,38 +30,15 @@ public class Course implements Serializable {
         assignments.clear();
         for (Assignment assignment : assignmentList) {
             String group = assignment.group;
-            assignments.getOrDefault(group, new ArrayList<Assignment>()).add(assignment);
+            Objects.requireNonNull(assignments.getOrDefault(group, new ArrayList<>())).add(assignment);
         }
     }
 
     public Course() {
         grade = 1.0;
-        name = "Placeholder";
         assignments = new HashMap<>();
         groups = new ArrayList<>();
         groupWeights = new HashMap<>();
-        //groups.add("Default");
-//        groupWeights.put("Default", 1.0);
-        //assignments.put("Default", new ArrayList<>());
-        // To make a grade unachievable set to value -1
-        // If no threshold met, give F
-        //  A+, A,  A-, B+, B,  B-, C+, C,  C-, D+,  D, D-, F+, F, F-
-        thresholds = new int[]{98, 92, 90, 88, 82, 80, 78, 72, 70, 68, 62, 60, 57, 52, 50};
-    }
-
-    /**
-     * Creates a named course
-     * @param name The name of the course
-     */
-    public Course(String name) {
-        grade = 1.0;
-        this.name = name;
-        assignments = new HashMap<>();
-        groups = new ArrayList<>();
-        groupWeights = new HashMap<>();
-        //groups.add("Default");
-//        groupWeights.put("Default", 1.0);
-        //assignments.put("Default", new ArrayList<>());
         // To make a grade unachievable set to value -1
         // If no threshold met, give F
         //  A+, A,  A-, B+, B,  B-, C+, C,  C-, D+,  D, D-, F+, F, F-
@@ -82,6 +47,7 @@ public class Course implements Serializable {
 
     /**
      * Formats the numerical grade into a decimal % value to 2 decimal places
+     *
      * @return The formatted grade
      */
     public String getNumericalGrade() {
@@ -91,6 +57,7 @@ public class Course implements Serializable {
 
     /**
      * Uses the thresholds to return the grade corresponding to the current grade
+     *
      * @return The letter grade
      */
     public String getLetterGrade() {
@@ -108,7 +75,7 @@ public class Course implements Serializable {
      * Default grade is an A
      */
     public void recalculate() {
-        if (groupWeights.isEmpty() && assignments.containsKey("Default") && assignments.get("Default").isEmpty()) {
+        if (groupWeights.isEmpty() && assignments.containsKey("Default") && Objects.requireNonNull(assignments.get("Default")).isEmpty()) {
             grade = 0.95; // If no assignments, return A
             return;
         }
@@ -138,7 +105,7 @@ public class Course implements Serializable {
                 if (a.grade != a.testGrade) {
                     valid = true;
                     grade += ((a.grade / a.pointsPossible) / (total / a.pointsPossible)) * weight;
-                    if(once) {
+                    if (once) {
                         once = false;
                         totalWeight += weight;
                     }
@@ -146,38 +113,39 @@ public class Course implements Serializable {
             }
         }
         grade /= totalWeight;
-        if(!valid) {
+        if (!valid) {
             grade = 0.95;
         }
     }
 
     /**
      * Adds a new group
-     * @param group The group name
+     *
+     * @param group  The group name
      * @param weight The arbitrary weight value
      */
     public void addGroup(String group, double weight) {
         groups.add(group);
         groupWeights.put(group, weight);
-        // TODO: Maybe sort the list
     }
 
 
     /**
      * Adds a new group with a default weight of 1.0
+     *
      * @param group The group name
      */
     public void addGroup(String group) {
         groups.add(group);
         groupWeights.put(group, 1.0);
-        // TODO: Maybe sort the list
     }
 
     /**
      * Sets the group's weight to the specified value
      * A 50-50 weight could be 1.0 and 1.0, 20-80 could be 5 and 20, a 1/3 1/3 1/3 split would have all equal values, etc.
      * Weights are arbitrary and need to scale properly with each other, keep units consistent (use percents that add up to 1)
-     * @param group The group name
+     *
+     * @param group  The group name
      * @param weight The arbitrary group weight
      */
     public void setGroupWeight(String group, double weight) {
@@ -187,35 +155,29 @@ public class Course implements Serializable {
     public ArrayList<String> getGroups() {
         return groups;
     }
+
     public HashMap<String, ArrayList<Assignment>> getAssignments() {
         return assignments;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * Adds a new assignment, creating one if absent
+     *
      * @param group The group name
-     * @param a The assignment
+     * @param a     The assignment
      */
     public void addAssignment(String group, Assignment a) {
         if (!groupWeights.containsKey(group)) {
             groupWeights.put(group, 1.0);
         }
         if (assignments.containsKey(group)) {
-            assignments.get(group).add(a);
+            Objects.requireNonNull(assignments.get(group)).add(a);
         } else {
-            if(!groupWeights.containsKey(group)) {
+            if (!groupWeights.containsKey(group)) {
                 addGroup(group);
             }
             assignments.put(group, new ArrayList<>());
-            assignments.get(group).add(a);
+            Objects.requireNonNull(assignments.get(group)).add(a);
         }
     }
 
@@ -237,9 +199,12 @@ public class Course implements Serializable {
         double weightedGradeSum = 0.0;
         for (String group : groupWeights.keySet()) {
             if (assignments.get(group) != null) {
-                for (Assignment a : assignments.get(group)) {
+                for (Assignment a : Objects.requireNonNull(assignments.get(group))) {
                     if (a.grade != a.testGrade) { // Assignment with a valid grade
-                        double weight = groupWeights.get(group);
+                        Double weight = groupWeights.get(group);
+                        if (weight == null) {
+                            weight = 1.0;
+                        }
                         currentWeight += weight;
                         weightedGradeSum += (a.grade / a.pointsPossible) * weight;
                         break;
@@ -259,11 +224,11 @@ public class Course implements Serializable {
         return minGradeNeeded * 100; // Return as a percentage between 0 and 100
     }
 
-    public static class Assignment implements Serializable{
-        private final double testGrade; // Testgrade is used to see if a grade is valid or not, will be set to 0xDEADBEEF
-        private double grade; // The current grade, equal to 0xDEADBEEF if not set
-        private double pointsPossible; // Total number of pts. possible
-        private String group; // The group name (idk if this needs to be here)
+    public static class Assignment implements Serializable {
+        private final double testGrade; // testGrade is used to see if a grade is valid or not, will be set to 0xDEADBEEF
+        private final double grade; // The current grade, equal to 0xDEADBEEF if not set
+        private final double pointsPossible; // Total number of pts. possible
+        private final String group; // The group name (idk if this needs to be here)
         private String name;
 
         public Assignment(double grade, double pointsPossible, String group) {
@@ -289,46 +254,17 @@ public class Course implements Serializable {
             this.group = group;
         }
 
-        public Assignment(String name, double grade) {
-        this.testGrade = 0xDEADBEEF;
-            this.grade = grade;
-            this.name = name;
-        }
-
-        public void clearGrade() {
-            grade = testGrade;
-        }
-
 
         public String getGroup() {
             return this.group;
         }
 
-        public double getPointsPossible() {
-            return pointsPossible;
+        public String getName() {
+            return this.name;
         }
 
-        public double getGrade() {
-            return grade;
+        public double getScore() {
+            return this.grade;
         }
-
-        public double getTestGrade() {
-            return testGrade;
-        }
-
-        public void setGrade(double grade) {
-            this.grade = grade;
-        }
-
-        public void setPointsPossible(double pointsPossible) {
-            this.pointsPossible = pointsPossible;
-        }
-        public String getName() {return this.name;}
-
-        public void setGroup(String group) {
-            this.group = group;
-        }
-
-        public double getScore() {return this.grade;}
     }
 }

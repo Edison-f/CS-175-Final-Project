@@ -1,9 +1,13 @@
 package edu.sjsu.android.cs175finalproject;
 
+
+import static java.security.AccessController.getContext;
+
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import edu.sjsu.android.cs175finalproject.Course.Assignment;
 
@@ -12,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-// this is not important
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private final ArrayList<Assignment> assignmentList;
@@ -31,12 +34,13 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         return new AssignmentViewHolder(view);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment assignment = assignmentList.get(position);
-        holder.nameTextView.setText(assignment.getName() + "\uD83D\uDCDA");
+        holder.nameTextView.setText(String.format("%s%s", assignment.getName(), "📚")); // Don't fetch from resources, it doesn't work
         holder.scoreTextView.setText(String.format("Score: %.2f", assignment.getScore()));
-        holder.weightTextView.setText("Group Name: " + assignment.getGroup());
+        holder.weightTextView.setText(String.format("%s%s", "Group Name: ", assignment.getGroup()));
 
 
         // remove

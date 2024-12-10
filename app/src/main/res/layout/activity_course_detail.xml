@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:padding="8dp"
-        android:text="Course Title"
+        android:text="@string/course_title"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,11 +25,12 @@
         android:id="@+id/addAssignmentButton"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:text="Add Assignment"
+        android:text="@string/add_assignment"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCourseTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewCourseTitle"
+        tools:ignore="VisualLintButtonSize" />
 
     <Button
         android:id="@+id/addGroupButton"
@@ -37,11 +38,12 @@
         android:layout_height="55dp"
         android:layout_margin="3dp"
         android:layout_marginTop="10dp"
-        android:text="Add Group"
+        android:text="@string/add_group"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/showGroupButton"
-        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton" />
+        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton"
+        tools:ignore="VisualLintButtonSize" />
 
     <Button
         android:id="@+id/showGroupButton"
@@ -49,11 +51,12 @@
         android:layout_height="55dp"
         android:layout_margin="3dp"
         android:layout_marginTop="10dp"
-        android:text="Show Groups"
+        android:text="@string/show_groups"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addGroupButton"
-        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton" />
+        app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton"
+        tools:ignore="VisualLintButtonSize" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAssignments"
@@ -73,9 +76,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="12dp"
-        android:text="Desired Grade:"
+        android:text="@string/desired_grade"
         app:layout_constraintBaseline_toBaselineOf="@+id/desiredInput"
         android:textSize="16sp"
+        android:textColorHint="@color/cardview_dark_background"
         app:layout_constraintBottom_toTopOf="@+id/calculateGradeButton"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -84,11 +88,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
-        android:hint="Enter Grade"
+        android:hint="@string/enter_grade"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/calculateDesiredGradeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/desiredGrade" />
+        app:layout_constraintStart_toEndOf="@+id/desiredGrade"
+        tools:ignore="VisualLintTextFieldSize" />
 
 
     <Button
@@ -99,11 +106,12 @@
         android:layout_marginStart="12dp"
         android:layout_marginBottom="-10dp"
         android:backgroundTint="@color/colorAccent"
-        android:text="Calculate Grade"
+        android:text="@string/calculate_grade"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toStartOf="@id/calculateDesiredGradeButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="VisualLintButtonSize" />
 
     <Button
         android:id="@+id/calculateDesiredGradeButton"
@@ -112,10 +120,11 @@
         android:layout_margin="3dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="-10dp"
-        android:text="Required Score"
+        android:text="@string/required_score"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintStart_toEndOf="@+id/calculateGradeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="VisualLintButtonSize" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

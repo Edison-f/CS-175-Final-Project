@@ -12,19 +12,20 @@
         android:layout_width="186dp"
         android:layout_height="29dp"
         android:layout_marginTop="8dp"
-        android:text="Assignment Name"
+        android:text="@string/assignment_name"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextSizeCheck" />
 
     <TextView
         android:id="@+id/assignmentScore"
         android:layout_width="178dp"
         android:layout_height="31dp"
-        android:text="Score: 0.00"
+        android:text="@string/score_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +35,7 @@
         android:id="@+id/assignmentWeight"
         android:layout_width="157dp"
         android:layout_height="30dp"
-        android:text="test"
+        android:text="@string/test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -8,12 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
-    private List<String> courseList;
+    private final List<String> courseList;
     private final OnCourseClickListener listener;
 
     public CourseAdapter(List<String> courseList, OnCourseClickListener listener) {
@@ -24,7 +23,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     @NonNull
     @Override
     public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        String courseTitle = courseList.get(position);
         // Inflate the course_item layout
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_item, parent, false);
         return new CourseViewHolder(view);

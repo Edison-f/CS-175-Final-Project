@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="ADD COURSE"
+        android:text="@string/add_course_main"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"
         app:iconPadding="8dp"
@@ -29,6 +29,6 @@
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Add Course" />
+        android:contentDescription="@string/add_course_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

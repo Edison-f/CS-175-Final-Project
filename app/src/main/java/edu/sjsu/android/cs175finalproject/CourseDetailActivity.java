@@ -11,10 +11,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.SyncFailedException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
@@ -34,7 +31,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 // This is something important, guys. This is the CourseDetail class that renders all the grade calculations.
 // 1. Set Group weight
-// TODO: If we need a database, we might have to fetch all the data here and generate the page.
 public class CourseDetailActivity extends AppCompatActivity {
 
     private ArrayList<Assignment> assignmentList;
@@ -47,15 +43,13 @@ public class CourseDetailActivity extends AppCompatActivity {
     private Course course;
 
     private String courseTitle;
-    private double desiredGrade = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.courseTitle = getIntent().getStringExtra("courseTitle");
-        Log.wtf("b", "awf");
         try {
-            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
+            Log.wtf("Reading File", this.getFilesDir() + "/" + courseTitle);
             File file = new File(getFilesDir(), courseTitle);
 
             if (file.exists() && file.length() > 0) {
@@ -76,7 +70,7 @@ public class CourseDetailActivity extends AppCompatActivity {
                 init(this.courseTitle);
             }
         }
-        catch (Exception e) {Log.wtf("be", e.getMessage());}
+        catch (Exception e) {Log.wtf("Reading Course File Error", e.getMessage());}
 
         setContentView(R.layout.activity_course_detail);
 
@@ -88,7 +82,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         assignmentAdapter = new AssignmentAdapter(assignmentList, this.course);
         recyclerView.setAdapter(assignmentAdapter);
-//        swipeToDelete();
+
         Button addAssignmentButton = findViewById(R.id.addAssignmentButton);
         addAssignmentButton.setOnClickListener(this::showAddAssignmentDialog);
 
@@ -110,18 +104,14 @@ public class CourseDetailActivity extends AppCompatActivity {
         groupList = new ArrayList<>();
 
         this.course = new Course();
-        this.course.setName(courseTitle);
         this.course = new Course();
-        this.course.setName(courseTitle);
     }
 
     @Override
     protected void onDestroy() {
-        Log.wtf("z", "x");
         try {
-            Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
+            Log.wtf("Saving to", String.valueOf(this.getFilesDir()));
             FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
-//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectOutputStream os = new ObjectOutputStream(fos);
 
 
@@ -129,60 +119,12 @@ public class CourseDetailActivity extends AppCompatActivity {
             os.close();
             fos.close();
         } catch (IOException e) {
-            // maybe write toast
-            Log.wtf("be", e.getMessage());
+            Log.wtf("Course Save Error", e.getMessage());
         }
         super.onDestroy();
     }
 
-    private void exportClass(View view) {
-        try {
-            Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
-            FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
-//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(course);
-            os.close();
-            fos.close();
-        } catch (IOException e) {
-            // maybe write toast
-            Log.wtf("be", e.getMessage());
-        }
-    }
 
-    private void importClass (View view) {
-        try {
-            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
-            FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
-            ObjectInputStream is = new ObjectInputStream(fis);
-            course = (Course) is.readObject();
-            is.close();
-            fis.close();
-        }
-        catch (Exception e) {Log.wtf("be", e.getMessage());}
-    }
-
-//    public void swipeToDelete() {
-//        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-//                new ItemTouchHelper.SimpleCallback(0,
-//                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//                    @Override
-//                    public boolean onMove(@NonNull RecyclerView recyclerView,
-//                                          @NonNull RecyclerView.ViewHolder viewHolder,
-//                                          @NonNull RecyclerView.ViewHolder target) {
-//                        return false;
-//                    }
-//                    @Override
-//                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
-//                                         int swipeDir) {
-//                        int position = viewHolder.getLayoutPosition();
-//                        assignmentList.remove(position);
-//                        assignmentAdapter.notifyItemRemoved(position);
-//                    }
-//                };
-//        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
-//        itemTouch.attachToRecyclerView(recyclerView);
-//    }
     private void showCalculatedGrade(View view) {
         course.recalculate();
         String letterGrade = course.getLetterGrade();
@@ -214,9 +156,9 @@ public class CourseDetailActivity extends AppCompatActivity {
             return;
         }
         try {
-            desiredGrade = Double.parseDouble(des.getText().toString());
+            double desiredGrade = Double.parseDouble(des.getText().toString());
             double minimumGrade = course.minimumGrade(desiredGrade);
-            String message = "";
+            String message;
             if (minimumGrade == -1) {
                 message = "Please use the 'Add Group' button to input group weights for" +
                         " the application to calculate the required score.\n";
@@ -238,14 +180,11 @@ public class CourseDetailActivity extends AppCompatActivity {
                     .setPositiveButton("OK", null)
                     .show();
         }
-        ;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void showShowGroupsDialog(View view) {
-        /**
-         * in order to make it more pretty, I decided to print out a table...
-         */
+         // in order to make it more pretty, I decided to print out a table...
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_show_group, null);
         builder.setView(dialogView);
