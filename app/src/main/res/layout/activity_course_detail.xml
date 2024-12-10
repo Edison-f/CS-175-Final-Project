@@ -27,7 +27,7 @@
         android:layout_height="55dp"
         android:text="Add Assignment"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintEnd_toStartOf="@+id/import_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewCourseTitle" />
 
@@ -51,7 +51,7 @@
         android:layout_marginTop="10dp"
         android:text="Show Groups"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintEnd_toStartOf="@+id/export_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addGroupButton"
         app:layout_constraintTop_toBottomOf="@+id/addAssignmentButton" />
 

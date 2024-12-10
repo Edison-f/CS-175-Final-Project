@@ -308,7 +308,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_assignment, null);
         builder.setView(dialogView);
         AtomicReference<Assignment> assignment = new AtomicReference<>();
-
         TextView nameInput = dialogView.findViewById(R.id.assignmentNameInput);
         TextView groupInput = dialogView.findViewById(R.id.assignmentGroup);
         TextView scoreInput = dialogView.findViewById(R.id.assignmentScoreInput);

@@ -31,13 +31,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="Add Course" />
 
-    <Button
-        android:id="@+id/serialize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="serialize"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddCourse"
-        app:layout_constraintEnd_toEndOf="@+id/btnAddCourse"
-        app:layout_constraintStart_toStartOf="@+id/btnAddCourse" />
 </androidx.constraintlayout.widget.ConstraintLayout>
