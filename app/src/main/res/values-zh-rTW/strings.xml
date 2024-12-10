@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CS175期末報告</string>
+    <string name="app_title">我的成績單</string>
+    <string name="add_course_button">添加课程</string>
+    <string name="hello_blank_fragment">你好，空白片段</string>
+    <string name="course_name">课程101</string>
+    <string name="score_format">分数: %.2f</string>
+    <string name="book_emoji">📚</string>
+    <string name="group_name">组名:</string>
+    <string name="course_title">课程標题</string>
+    <string name="add_assignment">添加作業</string>
+    <string name="add_group">添加類別</string>
+    <string name="show_groups">顯示類別</string>
+    <string name="desired_grade">期望成绩:</string>
+    <string name="enter_grade">输入成绩</string>
+    <string name="calculate_grade">計算成绩</string>
+    <string name="required_score">所需分数</string>
+    <string name="assignment_name">作業名称</string>
+    <string name="score_placeholder">分数: 0.00</string>
+    <string name="test">测试</string>
+    <string name="assignment_name_dialog">作業名称</string>
+    <string name="assignment_group">作業组</string>
+    <string name="score">分数</string>
+    <string name="max_score">最高分</string>
+    <string name="group_name_dialog">组名</string>
+    <string name="weight">權重</string>
+    <string name="groups_show">類別</string>
+    <string name="group_name_show">類別名</string>
+    <string name="group_weight_show">類別權重</string>
+    <string name="add_course_main">添加課程</string>
+    <string name="add_course_desc">添加課程描述</string>
+</resources>

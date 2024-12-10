@@ -24,7 +24,7 @@
             android:background="@color/toolbarTextColor"
             android:titleTextColor="@color/toolbarTextColor"
             android:textStyle="bold"
-            app:title="📚 MyGrades" />
+            app:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Fragment Container for the main content -->
