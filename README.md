@@ -4,11 +4,11 @@
 
 - Where to find the project backlog?
 
-A link to the sheet will be provided under the comments section in the Canvas submission.
+A link to the sheet will be provided in the text box in the Canvas submission.
 
 - Where to find the final report?
 
-A link to the Google Docs version of the report will be provided under the comments section in the Canvas submission. There is a text version below that may not exactly match the final version.
+A link to the Google Docs version of the report will be provided in the text box in the Canvas submission. There is a text version below that may not exactly match the final version.
 
 -   **App Name** - Grade Calculator
 
