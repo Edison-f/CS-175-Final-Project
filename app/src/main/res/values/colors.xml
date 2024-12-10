@@ -1,8 +1,8 @@
 <resources>
-    <color name="colorPrimary">#3F51B5</color> <!-- Indigo for primary elements -->
-    <color name="colorPrimaryDark">#303F9F</color> <!-- Darker indigo for darker accents -->
-    <color name="colorAccent">#7CE3EF</color> <!-- Soft coral for action items -->
-    <color name="toolbarTextColor">#7CE3EF</color> <!-- White text for toolbar -->
+    <color name="colorPrimary">#630904</color> <!-- Indigo for primary elements -->
+    <color name="colorPrimaryDark">#4E0602</color> <!-- Darker indigo for darker accents -->
+    <color name="colorAccent">#88130C</color> <!-- Soft coral for action items -->
+    <color name="toolbarTextColor">#710000</color> <!-- White text for toolbar -->
     <color name="backgroundColor">#FDFDFD</color> <!-- Warm, almost white background -->
     <color name="white">#FFFFFF</color>
 </resources>
