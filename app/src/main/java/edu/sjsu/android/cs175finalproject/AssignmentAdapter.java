@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private final ArrayList<Assignment> assignmentList;
-    private Course beloned2Course;
+    private final Course beloned2Course;
 
     public AssignmentAdapter(ArrayList<Assignment> assignmentList, Course course) {
         this.assignmentList = assignmentList;

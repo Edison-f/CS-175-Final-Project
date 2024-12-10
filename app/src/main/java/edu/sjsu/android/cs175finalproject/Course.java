@@ -95,21 +95,6 @@ public class Course implements Serializable {
     }
 
     /**
-     *   This is to remove the assignment from the UI
-     */
-    public void removeAssignment(String group, String assignmentName) {
-        if (assignments.containsKey(group)) {
-            ArrayList<Assignment> groupAssignments = assignments.get(group);
-            groupAssignments.removeIf(assignment -> assignment.getName().equals(assignmentName));
-
-            // Remove the group if empty (optional)
-            if (groupAssignments.isEmpty()) {
-                assignments.remove(group);
-            }
-        }
-    }
-
-    /**
      * Recalculates the grade using all assignments with a grade value set
      * Call after adding or removing an assignment(s) or group(s)
      * Default grade is an A

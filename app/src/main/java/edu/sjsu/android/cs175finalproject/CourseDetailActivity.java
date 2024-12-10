@@ -205,9 +205,14 @@ public class CourseDetailActivity extends AppCompatActivity {
         try {
             desiredGrade = Double.parseDouble(des.getText().toString());
             double minimumGrade = course.minimumGrade(desiredGrade);
-
-            String message = "Your required grade to achieve the desired grade:\n" +
-                    "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n";
+            String message = "";
+            if (minimumGrade == -1) {
+                message = "Please use the 'Add Group' button to input group weights for" +
+                        " the application to calculate the required score.\n";
+            } else {
+                message = "Your required grade to achieve the desired grade:\n" +
+                        "Minimum Numeric Grade: " + String.format(Locale.US, "%.2f", minimumGrade) + "\n\n";
+            }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Required Grade")
                     .setMessage(message) // Set the message here
