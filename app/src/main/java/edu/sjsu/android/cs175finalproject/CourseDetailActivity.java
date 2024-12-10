@@ -11,8 +11,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +38,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private ArrayList<Assignment> assignmentList;
     private ArrayList<String> groupList;
+    RecyclerView recyclerView;
     //private HashMap<String, Double> groupWeights;
     private AssignmentAdapter assignmentAdapter;
     private String courseTitle;
@@ -60,12 +63,12 @@ public class CourseDetailActivity extends AppCompatActivity {
         TextView courseTitleView = findViewById(R.id.textViewCourseTitle);
         courseTitleView.setText(courseTitle);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewAssignments);
+        recyclerView = findViewById(R.id.recyclerViewAssignments);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         assignmentAdapter = new AssignmentAdapter(assignmentList);
         recyclerView.setAdapter(assignmentAdapter);
-
+        swipeToDelete();
         Button addAssignmentButton = findViewById(R.id.addAssignmentButton);
         addAssignmentButton.setOnClickListener(this::showAddAssignmentDialog);
 
@@ -144,6 +147,27 @@ public class CourseDetailActivity extends AppCompatActivity {
         }
     }
 
+    public void swipeToDelete() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int swipeDir) {
+                        int position = viewHolder.getLayoutPosition();
+                        assignmentList.remove(position);
+                        assignmentAdapter.notifyItemRemoved(position);
+                    }
+                };
+        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouch.attachToRecyclerView(recyclerView);
+    }
     private void showCalculatedGrade(View view) {
         course.recalculate();
         String letterGrade = course.getLetterGrade();

@@ -288,7 +288,7 @@ public class Course implements Serializable {
 
 
         public String getGroup() {
-            return group;
+            return this.group;
         }
 
         public double getPointsPossible() {
