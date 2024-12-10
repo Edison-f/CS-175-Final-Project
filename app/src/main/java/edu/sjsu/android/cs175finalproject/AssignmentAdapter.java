@@ -34,10 +34,12 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment assignment = assignmentList.get(position);
-        holder.nameTextView.setText(assignment.getName());
+        holder.nameTextView.setText(assignment.getName() + "\uD83D\uDCDA");
         holder.scoreTextView.setText(String.format("Score: %.2f", assignment.getScore()));
-        holder.weightTextView.setText(assignment.getGroup());
+        holder.weightTextView.setText("Group Name: " + assignment.getGroup());
 
+
+        // remove
         holder.itemView.setOnClickListener(v -> {
             assignmentList.remove(position);
             beloned2Course.update_assignment_list(assignmentList);

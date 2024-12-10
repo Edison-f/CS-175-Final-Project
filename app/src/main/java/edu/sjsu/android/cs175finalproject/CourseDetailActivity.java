@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.SyncFailedException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
@@ -48,21 +49,36 @@ public class CourseDetailActivity extends AppCompatActivity {
     private String courseTitle;
     private double desiredGrade = 100;
 
-    // in this course details class, we have our Course class
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_detail);
+        this.courseTitle = getIntent().getStringExtra("courseTitle");
+        Log.wtf("b", "awf");
+        try {
+            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
+            File file = new File(getFilesDir(), courseTitle);
 
-        // this is where we need to fetch from the DB I think.
-        // I don't know how to do that yet, but we will figure it out.
-        courseTitle = getIntent().getStringExtra("courseTitle");
-        assignmentList = new ArrayList<>();
-        groupList = new ArrayList<>();
-        this.course = new Course();
-        this.course.setName(courseTitle);
+            if (file.exists() && file.length() > 0) {
+                FileInputStream fis = new FileInputStream(file);
+                ObjectInputStream is = new ObjectInputStream(fis);
+                try {
+                    this.course = (Course) is.readObject();
+                    this.assignmentList = (ArrayList<Assignment>) this.course.returnAssignmentList();
+                    this.groupList = course.getGroups();
+
+                    is.close();
+                    fis.close();
+                } catch (Exception e) {
+                    init(this.courseTitle);
+                }
+
+            } else {
+                init(this.courseTitle);
+            }
+        }
+        catch (Exception e) {Log.wtf("be", e.getMessage());}
+
+        setContentView(R.layout.activity_course_detail);
 
         TextView courseTitleView = findViewById(R.id.textViewCourseTitle);
         courseTitleView.setText(courseTitle);
@@ -87,23 +103,16 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         Button showGroupButton = findViewById(R.id.showGroupButton);
         showGroupButton.setOnClickListener(this::showShowGroupsDialog);
+    }
 
-        Button exportButton = findViewById(R.id.export_button);
-        exportButton.setOnClickListener(this::exportClass);
+    public void init (String courseTitle) {
+        this.assignmentList = new ArrayList<>();
+        groupList = new ArrayList<>();
 
-        Button importButton = findViewById(R.id.import_button);
-        importButton.setOnClickListener(this::importClass);
-
-        Log.wtf("b", "awf");
-        try {
-            Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
-            FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
-            ObjectInputStream is = new ObjectInputStream(fis);
-            course = (Course) is.readObject();
-            is.close();
-            fis.close();
-        }
-        catch (Exception e) {Log.wtf("be", e.getMessage());}
+        this.course = new Course();
+        this.course.setName(courseTitle);
+        this.course = new Course();
+        this.course.setName(courseTitle);
     }
 
     @Override
@@ -114,6 +123,8 @@ public class CourseDetailActivity extends AppCompatActivity {
             FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
 //            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectOutputStream os = new ObjectOutputStream(fos);
+
+
             os.writeObject(course);
             os.close();
             fos.close();
@@ -331,17 +342,14 @@ public class CourseDetailActivity extends AppCompatActivity {
                 String scoreString = scoreInput.getText().toString();
 
                 double scorePossible = Double.parseDouble(scorePossibleInput.getText().toString());
-                if (scoreString.isEmpty()) {
-                    assignmentList.add(new Assignment(name + "(Not yet graded.)", 0));
-                    assignment.set(new Assignment(scorePossible, group));
-                } else {
-                    double score = Double.parseDouble(scoreString);
-                    if (scorePossible < score) {
-                        throw new IllegalArgumentException("Invalid possible score");
-                    }
-                    assignmentList.add(new Assignment(name + "\uD83D\uDCDA", score));
-                    assignment.set(new Assignment(score, scorePossible, group));
+
+                double score = Double.parseDouble(scoreString);
+                if (scorePossible < score) {
+                    throw new IllegalArgumentException("Invalid possible score");
                 }
+                Assignment newAssignment = new Assignment(name, score, scorePossible, group);
+                assignmentList.add(newAssignment);
+                assignment.set(newAssignment);
 
                 // UI stuff
                 course.addAssignment(group, assignment.get());

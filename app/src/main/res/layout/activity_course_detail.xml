@@ -118,22 +118,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <Button
-        android:id="@+id/export_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Export"
-        app:layout_constraintBottom_toBottomOf="@+id/showGroupButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/showGroupButton" />
-
-    <Button
-        android:id="@+id/import_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Import"
-        app:layout_constraintBottom_toBottomOf="@+id/addAssignmentButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/addAssignmentButton" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

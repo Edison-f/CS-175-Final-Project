@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Course implements Serializable {
 
@@ -25,10 +27,16 @@ public class Course implements Serializable {
     private boolean roundUp; // Is the professor expected to round up to nearest percent (currently unused) // TODO
     private static final String[] gradeLetters = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F+", "F", "F-"}; // Grade letters that should correspond to thresholds
 
+    public List<Assignment> returnAssignmentList() {
+        List<Assignment> ret = new ArrayList<>();
 
-    /**
-     * Creates a new course
-     */
+        for (Entry<String, ArrayList<Assignment>> ent : assignments.entrySet()) {
+            for (Assignment assignment : ent.getValue()) {
+                ret.add(assignment);
+            }
+        }
+        return ret;
+    }
 
     public void update_assignment_list(List<Assignment> assignmentList) {
         assignments.clear();
@@ -154,6 +162,7 @@ public class Course implements Serializable {
         // TODO: Maybe sort the list
     }
 
+
     /**
      * Adds a new group with a default weight of 1.0
      * @param group The group name
@@ -262,6 +271,14 @@ public class Course implements Serializable {
             this.grade = grade;
             this.pointsPossible = pointsPossible;
             this.group = group;
+        }
+
+        public Assignment(String name, double grade, double pointsPossible, String group) {
+            this.testGrade = 0xDEADBEEF;
+            this.grade = grade;
+            this.name = name;
+            this.group = group;
+            this.pointsPossible = pointsPossible;
         }
 
 
