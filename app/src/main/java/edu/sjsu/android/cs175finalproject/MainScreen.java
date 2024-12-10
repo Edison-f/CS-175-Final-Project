@@ -51,8 +51,6 @@ public class MainScreen extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_screen, container, false);
 
         // Initialize button and set its click listener
-        view.findViewById(R.id.serialize).setOnClickListener(v -> {
-        });
         Button addCourseButton = view.findViewById(R.id.btnAddCourse);
         addCourseButton.setOnClickListener(v -> {
             // Show a dialog to get the course name from the user
@@ -70,6 +68,10 @@ public class MainScreen extends Fragment {
             builder.setPositiveButton("Add", (dialog, which) -> {
                 String courseName = input.getText().toString().trim();
                 if (!courseName.isEmpty()) {
+                    if(courseName.equals("courseList")) {
+                        Toast.makeText(getContext(), "Course name cannot be 'courseList'", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     addCourse(courseName); // Add the course
                 } else {
                     Toast.makeText(getContext(), "Course name cannot be empty", Toast.LENGTH_SHORT).show();

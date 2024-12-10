@@ -84,12 +84,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         Button showGroupButton = findViewById(R.id.showGroupButton);
         showGroupButton.setOnClickListener(this::showShowGroupsDialog);
 
-        Button exportButton = findViewById(R.id.export_button);
-        exportButton.setOnClickListener(this::exportClass);
-
-        Button importButton = findViewById(R.id.import_button);
-        importButton.setOnClickListener(this::importClass);
-
         Log.wtf("b", "awf");
         try {
             Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
