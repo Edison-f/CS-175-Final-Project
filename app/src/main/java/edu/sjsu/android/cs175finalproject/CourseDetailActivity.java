@@ -95,8 +95,9 @@ public class CourseDetailActivity extends AppCompatActivity {
             course = (Course) is.readObject();
             is.close();
             fis.close();
+        } catch (Exception e) {
+            Log.wtf("be", e.getMessage());
         }
-        catch (Exception e) {Log.wtf("be", e.getMessage());}
     }
 
     @Override
@@ -105,7 +106,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         try {
             Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
             FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
-//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(course);
             os.close();
@@ -121,7 +121,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         try {
             Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
             FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
-//            FileOutputStream fos = new FileOutputStream(this.getFilesDir() + "/" + courseTitle);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(course);
             os.close();
@@ -132,7 +131,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void importClass (View view) {
+    private void importClass(View view) {
         try {
             Log.wtf("z", this.getFilesDir() + "/" + courseTitle);
             FileInputStream fis = new FileInputStream(this.getFilesDir() + "/" + courseTitle);
@@ -140,8 +139,9 @@ public class CourseDetailActivity extends AppCompatActivity {
             course = (Course) is.readObject();
             is.close();
             fis.close();
+        } catch (Exception e) {
+            Log.wtf("be", e.getMessage());
         }
-        catch (Exception e) {Log.wtf("be", e.getMessage());}
     }
 
     private void showCalculatedGrade(View view) {
@@ -252,7 +252,17 @@ public class CourseDetailActivity extends AppCompatActivity {
                 // UI stuff
                 groupList.add(groupName + " with weight " + weight);
                 course.addGroup(groupName, weight);
-
+                try {
+                    Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
+                    FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
+                    ObjectOutputStream os = new ObjectOutputStream(fos);
+                    os.writeObject(course);
+                    os.close();
+                    fos.close();
+                } catch (IOException e) {
+                    // maybe write toast
+                    Log.wtf("be", e.getMessage());
+                }
                 assignmentAdapter.notifyDataSetChanged();
             } catch (IllegalArgumentException e) {
                 // Handle custom validation errors
@@ -313,7 +323,17 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                 // UI stuff
                 course.addAssignment(group, assignment.get());
-
+                try {
+                    Log.wtf("this.getFilesDir()", String.valueOf(this.getFilesDir()));
+                    FileOutputStream fos = getApplicationContext().openFileOutput(courseTitle, Context.MODE_PRIVATE);
+                    ObjectOutputStream os = new ObjectOutputStream(fos);
+                    os.writeObject(course);
+                    os.close();
+                    fos.close();
+                } catch (IOException e) {
+                    // maybe write toast
+                    Log.wtf("be", e.getMessage());
+                }
                 assignmentAdapter.notifyDataSetChanged();
             } catch (IllegalArgumentException e) {
                 // Handle custom validation errors

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +37,8 @@ public class MainScreen extends Fragment {
     private CourseAdapter courseAdapter;
     private ArrayList<String> courseList;
 
-    public MainScreen() {}
+    public MainScreen() {
+    }
 
     public static MainScreen newInstance() {
         return new MainScreen();
@@ -45,7 +51,8 @@ public class MainScreen extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_screen, container, false);
 
         // Initialize button and set its click listener
-        view.findViewById(R.id.serialize).setOnClickListener(v -> {});
+        view.findViewById(R.id.serialize).setOnClickListener(v -> {
+        });
         Button addCourseButton = view.findViewById(R.id.btnAddCourse);
         addCourseButton.setOnClickListener(v -> {
             // Show a dialog to get the course name from the user
@@ -81,10 +88,20 @@ public class MainScreen extends Fragment {
 
         // Initialize course list and adapter <== This is just some default courses (if we dont have DB... we can fake it)
         courseList = new ArrayList<>();
-        courseList.add("✏️ CS175");
-        courseList.add("✏️ CS101");
-        courseList.add("✏️ CS146");
+        try {
+            FileInputStream fis = new FileInputStream(getContext().getFilesDir() + "/" + "courseList");
+            Scanner in = new Scanner(fis);
+            while (in.hasNextLine()) {
+                courseList.add(in.nextLine());
+            }
+            Log.wtf("Worked", "Read");
 
+        } catch (Exception e) {
+            Log.wtf("Read", e.getMessage());
+            courseList.add("✏️ CS175");
+            courseList.add("✏️ CS101");
+            courseList.add("✏️ CS146");
+        }
         courseAdapter = new CourseAdapter(courseList, this::onCourseClick);
         recyclerView.setAdapter(courseAdapter);
 
@@ -97,10 +114,21 @@ public class MainScreen extends Fragment {
             courseList.add(courseTitle); // Add the course to the list
             courseAdapter.notifyItemInserted(courseList.size() - 1); // Notify the adapter
         }
+        try {
+            FileOutputStream fos = new FileOutputStream(getContext().getFilesDir() + "/" + "courseList", false);
+            for (String course : courseList) {
+                fos.write((course + "\n").getBytes());
+                Log.wtf("Course data", (course + "\n"));
+            }
+            fos.close();
+            Log.wtf("Worked", "Saved");
+        } catch (IOException e) {
+            Log.wtf("save error", e.getMessage());
+        }
     }
 
     private void onCourseClick(String courseTitle) {
-         // Navigate to CourseDetailActivity with the selected course
+        // Navigate to CourseDetailActivity with the selected course
         Intent intent = new Intent(getContext(), CourseDetailActivity.class);
         intent.putExtra("courseTitle", courseTitle);
         startActivity(intent);
