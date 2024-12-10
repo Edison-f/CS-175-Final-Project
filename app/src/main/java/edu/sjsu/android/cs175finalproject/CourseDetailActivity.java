@@ -40,12 +40,16 @@ public class CourseDetailActivity extends AppCompatActivity {
     private ArrayList<String> groupList;
     RecyclerView recyclerView;
     //private HashMap<String, Double> groupWeights;
+
+    // this should sync with the course assignments
     private AssignmentAdapter assignmentAdapter;
+    private Course course;
+
     private String courseTitle;
     private double desiredGrade = 100;
 
     // in this course details class, we have our Course class
-    private Course course;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +70,9 @@ public class CourseDetailActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewAssignments);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        assignmentAdapter = new AssignmentAdapter(assignmentList);
+        assignmentAdapter = new AssignmentAdapter(assignmentList, this.course);
         recyclerView.setAdapter(assignmentAdapter);
-        swipeToDelete();
+//        swipeToDelete();
         Button addAssignmentButton = findViewById(R.id.addAssignmentButton);
         addAssignmentButton.setOnClickListener(this::showAddAssignmentDialog);
 
@@ -147,27 +151,27 @@ public class CourseDetailActivity extends AppCompatActivity {
         catch (Exception e) {Log.wtf("be", e.getMessage());}
     }
 
-    public void swipeToDelete() {
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-                new ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                    @Override
-                    public boolean onMove(@NonNull RecyclerView recyclerView,
-                                          @NonNull RecyclerView.ViewHolder viewHolder,
-                                          @NonNull RecyclerView.ViewHolder target) {
-                        return false;
-                    }
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
-                                         int swipeDir) {
-                        int position = viewHolder.getLayoutPosition();
-                        assignmentList.remove(position);
-                        assignmentAdapter.notifyItemRemoved(position);
-                    }
-                };
-        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouch.attachToRecyclerView(recyclerView);
-    }
+//    public void swipeToDelete() {
+//        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+//                new ItemTouchHelper.SimpleCallback(0,
+//                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//                    @Override
+//                    public boolean onMove(@NonNull RecyclerView recyclerView,
+//                                          @NonNull RecyclerView.ViewHolder viewHolder,
+//                                          @NonNull RecyclerView.ViewHolder target) {
+//                        return false;
+//                    }
+//                    @Override
+//                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+//                                         int swipeDir) {
+//                        int position = viewHolder.getLayoutPosition();
+//                        assignmentList.remove(position);
+//                        assignmentAdapter.notifyItemRemoved(position);
+//                    }
+//                };
+//        ItemTouchHelper itemTouch = new ItemTouchHelper(simpleItemTouchCallback);
+//        itemTouch.attachToRecyclerView(recyclerView);
+//    }
     private void showCalculatedGrade(View view) {
         course.recalculate();
         String letterGrade = course.getLetterGrade();
@@ -304,6 +308,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_assignment, null);
         builder.setView(dialogView);
         AtomicReference<Assignment> assignment = new AtomicReference<>();
+
         TextView nameInput = dialogView.findViewById(R.id.assignmentNameInput);
         TextView groupInput = dialogView.findViewById(R.id.assignmentGroup);
         TextView scoreInput = dialogView.findViewById(R.id.assignmentScoreInput);
@@ -323,7 +328,6 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                 double scorePossible = Double.parseDouble(scorePossibleInput.getText().toString());
                 if (scoreString.isEmpty()) {
-
                     assignmentList.add(new Assignment(name + "(Not yet graded.)", 0));
                     assignment.set(new Assignment(scorePossible, group));
                 } else {
@@ -337,7 +341,6 @@ public class CourseDetailActivity extends AppCompatActivity {
 
                 // UI stuff
                 course.addAssignment(group, assignment.get());
-
                 assignmentAdapter.notifyDataSetChanged();
             } catch (IllegalArgumentException e) {
                 // Handle custom validation errors

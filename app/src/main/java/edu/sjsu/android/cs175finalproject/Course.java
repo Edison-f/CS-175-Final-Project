@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Course implements Serializable {
 
@@ -13,6 +14,7 @@ public class Course implements Serializable {
     }
 
     // TODO: Probably want to retrieve data from files / database
+
 
     private double grade; // The grade in the course
     private String name; // The name of the course
@@ -27,6 +29,15 @@ public class Course implements Serializable {
     /**
      * Creates a new course
      */
+
+    public void update_assignment_list(List<Assignment> assignmentList) {
+        assignments.clear();
+        for (Assignment assignment : assignmentList) {
+            String group = assignment.group;
+            assignments.getOrDefault(group, new ArrayList<Assignment>()).add(assignment);
+        }
+    }
+
     public Course() {
         grade = 1.0;
         name = "Placeholder";
